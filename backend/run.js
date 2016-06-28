@@ -8,4 +8,4 @@ require('babel-register');
 require('babel-preset-es2015');
 var main = require('./src/main').default;
 
-main([['Arie', 'blue'], ['Banafsheh', 'red']]);
+main([['Booby', 'black'], ['Bibi', 'pink']]);

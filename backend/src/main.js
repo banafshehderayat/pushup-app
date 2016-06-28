@@ -1,7 +1,8 @@
 /**
  * This serves as the entry point to your application.
  */
-import collection from '../db.js';
+import collection from './db.js';
+
 let main = (arrayOfUsers) => {
   return collection('users')
     .then ((Users) => {
