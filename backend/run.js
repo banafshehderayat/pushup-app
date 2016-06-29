@@ -16,10 +16,10 @@ var app = express();
 app.use('/', routes);
 app.use('/users', users);
 
-app.set('views', '/home/banafsheh/git/pushup-app/frontend/views' );
+//app.set('views', '/home/banafsheh/git/pushup-app/frontend/views' );
 
-app.engine('html', require('ejs').renderFile);
-app.set('view engine', 'html');
+// app.engine('html', require('ejs').renderFile);
+// app.set('view engine', 'html');
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
