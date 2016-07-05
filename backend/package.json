@@ -11,9 +11,15 @@
     "babel-register": "^6.9.0"
   },
   "dependencies": {
-    "debug": "~2.2.0",
-    "ejs": "^2.4.2",
+    "bcrypt": "^0.8.5",
     "express": "~4.13.4",
-    "mongodb": "2.1.18"
+    "mongodb": "2.1.18",
+    "mongoose": "^3.8.40",
+    "passport": "^0.1.18",
+    "passport-local": "^0.1.6",
+    "passport-jwt": "^1.2.1",
+    "morgan": "~1.0.0",
+    "body-parser": "~1.9.2",
+    "jwt-simple": "^0.3.1"
   }
 }
