@@ -14,7 +14,14 @@ let UserSchema = new Schema({
   password: {
         type: String,
         required: true
-    }
+    },
+  status: {
+    type: [Number],
+    required: true
+  },
+  test: {
+    type: Number
+  }
 });
 
 UserSchema.pre('save', function (next) {
