@@ -39,7 +39,7 @@ app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
 
     // Request headers you wish to allow
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type,Authorization' );
 
     // Set to true if you need the website to include cookies in the requests sent
     // to the API (e.g. in case you use sessions)
@@ -73,7 +73,8 @@ apiRoutes.post('/signup', function(req, res) {
     var newUser = new User({
       name: req.body.name,
       password: req.body.password,
-      status: 0
+      status: [0,0,0],
+      test : 0
     });
     // save the user
     newUser.save(function(err) {
@@ -124,7 +125,7 @@ apiRoutes.get('/profile', passport.authenticate('jwt', { session: false}), funct
         if (!user) {
           return res.status(403).send({success: false, msg: 'Authentication failed. User not found.'});
         } else {
-          res.json({success: true, msg: 'Welcome in the member area ' + user.name + '! Your status is' + user.status+ ' And your test is:' + user.test});
+          res.json({success: true, msg: 'Welcome in the member area ' + user.name, user: user});
         }
     });
   } else {
@@ -133,7 +134,8 @@ apiRoutes.get('/profile', passport.authenticate('jwt', { session: false}), funct
 });
 
 
-apiRoutes.post('/update', passport.authenticate('jwt', { session: false}), function(req, res){
+apiRoutes.post('/update', function(req, res){
+  console.log(req.body);
   var token = getToken(req.headers);
   var newStatus = req.body.newStatus;
   var newTest = req.body.newTest;
@@ -143,8 +145,9 @@ apiRoutes.post('/update', passport.authenticate('jwt', { session: false}), funct
         if (err) throw err;
 
         if (!user) {
-          return res.status(403).send({success: false, msg: 'Authentication failed. User not found.'});
+          return res.status(403).send({success: false, msg: 'update failed'});
         } else {
+          console.log(newStatus, newTest);
           res.json({success: true, msg: 'Welcome in the member area ' + user.name + '!' + ' status ' + user.status + ' test '+ user.test});
         }
     });
@@ -154,20 +157,12 @@ apiRoutes.post('/update', passport.authenticate('jwt', { session: false}), funct
 });
 
 
-apiRoutes.post('/ranking', function(req, res){
-  var statusArray = req.body.statusArray;
-  var test = req.body.test;
-  var statusWeek = statusArray[0];
-
-
-  res.json({ranking});
-});
-
 apiRoutes.post('/workout',  function(req, res){
-  var statusArray = req.body.statusArray;
+  var statusArray = req.body.status;
   var test = req.body.test;
   var weekNum = 0;
   var dayNum = 0;
+  console.log(req.body);
   var statusWeek = statusArray[0];
   var statusDay = statusArray[1];
   var ranking = 0;
@@ -242,7 +237,7 @@ apiRoutes.post('/workout',  function(req, res){
     if (!workout) {
       return res.status(403).send({msg: 'No workout found!'});
     } else {
-      res.json({msg: workout});
+      res.json({success: true, msg: workout});
     }
   });
 });

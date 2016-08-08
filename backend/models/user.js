@@ -16,11 +16,8 @@ let UserSchema = new Schema({
         required: true
     },
   status: {
-    type: [Number],
-    required: true
   },
   test: {
-    type: Number
   }
 });
 
