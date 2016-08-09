@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+  import { Component, OnInit } from '@angular/core';
 import { NgForm }    from '@angular/forms';
 import { AuthService } from '../services/authService';
 import {Router} from '@angular/router';
@@ -13,11 +13,15 @@ export class ProfileComponent implements OnInit {
   router: Router;
   authService: AuthService;
   displayTest : Boolean;
-  displayWorkout : Boolean;
+  displayWorkoutButton : Boolean;
+  displayDoneWorkout : Boolean;
+  displayRepeatWorkout: Boolean;
   test = {
     'testResult': 0
   };
-  userStatus : [number];
+  userStatus : number[];
+  workoutSets : number[];
+  nextStatus:  number[];
 
   constructor (_router: Router, _authService: AuthService) {
     this.router = _router;
@@ -47,9 +51,10 @@ export class ProfileComponent implements OnInit {
       } else {
         if (res.success){
           this.userStatus = res.user.status;
-          console.log(this.userStatus);
-          console.log(this.testNeeded(this.userStatus));
           this.displayTest = this.testNeeded(this.userStatus);
+          this.displayWorkoutButton = !this.displayTest;
+          this.displayRepeatWorkout = false;
+          this.displayDoneWorkout = false;
         } else {
           console.log(res.msg);
         }
@@ -66,6 +71,7 @@ export class ProfileComponent implements OnInit {
       } else {
         if (res.success){
           this.displayTest = false;
+          this.displayWorkoutButton = true;
         } else {
           console.log(res.msg);
         }
@@ -80,6 +86,9 @@ export class ProfileComponent implements OnInit {
         console.log(err);
       } else {
         if (res.success){
+          this.displayWorkoutButton = false;
+          this.displayRepeatWorkout = true;
+          this.displayDoneWorkout = true;
           this.authService.workout(res.user.status, res.user.test)
           .subscribe((res, err) => {
             if (err){
@@ -87,7 +96,61 @@ export class ProfileComponent implements OnInit {
               console.log(err);
             } else {
               if (res.success){
-                console.log(res.msg.sets);
+                this.workoutSets = res.msg.sets;
+                this.nextStatus = res.status;
+                console.log(this.nextStatus);
+              } else {
+                console.log(res.msg);
+              }
+            }
+          });
+        } else {
+          console.log(res.msg);
+        }
+      }
+    });
+  }
+
+  doneWorkout(){
+    this.authService.profile()
+    .subscribe((res, err) => {
+      if (err){
+        console.log(err);
+      } else {
+        if (res.success){
+          this.authService.update(this.nextStatus, res.user.test)
+          .subscribe((res, err) => {
+            if (err){
+              console.log(err);
+            } else {
+              if (res.success){
+                console.log('done');
+              } else {
+                console.log(res.msg);
+              }
+            }
+          });
+        } else {
+          console.log(res.msg);
+        }
+      }
+    });
+  }
+
+  repeatWorkout(){
+    this.authService.profile()
+    .subscribe((res, err) => {
+      if (err){
+        console.log(err);
+      } else {
+        if (res.success){
+          this.authService.update(this.userStatus, res.user.test)
+          .subscribe((res, err) => {
+            if (err){
+              console.log(err);
+            } else {
+              if (res.success){
+                console.log('done');
               } else {
                 console.log(res.msg);
               }

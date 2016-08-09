@@ -158,14 +158,16 @@ apiRoutes.post('/update', function(req, res){
 
 
 apiRoutes.post('/workout',  function(req, res){
+  console.log(req.body.status);
   var statusArray = req.body.status;
   var test = req.body.test;
   var weekNum = 0;
   var dayNum = 0;
-  console.log(req.body);
+  console.log(req.body.status);
   var statusWeek = statusArray[0];
   var statusDay = statusArray[1];
   var ranking = 0;
+  console.log(statusWeek, statusDay, ranking);
   // based on initial test find out if user starts from first week or week 3
   if (statusWeek == 0){
     if (test < 5){
@@ -217,6 +219,7 @@ apiRoutes.post('/workout',  function(req, res){
        ranking = 3;
      }
    }
+
    if (statusDay == 1 || statusDay == 2) {
      weekNum = statusWeek;
      dayNum = statusDay + 1;
@@ -228,6 +231,8 @@ apiRoutes.post('/workout',  function(req, res){
    }
   }
 
+  var stat = [weekNum,dayNum,ranking];
+  //console.log('weekNum: ' + weekNum + ' dayNum: ' + dayNum + 'ranking: ' +ranking);
   Workout.findOne({
     week : weekNum,
     day: dayNum,
@@ -237,7 +242,7 @@ apiRoutes.post('/workout',  function(req, res){
     if (!workout) {
       return res.status(403).send({msg: 'No workout found!'});
     } else {
-      res.json({success: true, msg: workout});
+      res.json({success: true, msg: workout, status: stat});
     }
   });
 });
